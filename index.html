@@ -24,5 +24,70 @@
 			Age :<span id="userAge"></span>
 		</fieldset>
 	</div>
+	<script type="text/javascript">
+		if(typeof web3 !== 'undefined'){
+			web3 = new Web3(web3.currentProvider);
+		}
+		else{
+			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		}
+		web3.eth.defaultAccount = web3.eth.accounts[0];
+		var detailsContract =web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "a",
+				"type": "uint256"
+			}
+		],
+		"name": "setDetails",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getDetails",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]);
+		var details = detailsContract.at('0xfe4a44c707ef83ae3b83dc04a8ebe8035fb3129c');
+		console.log(details);
+
+		// ------------------------
+		details.getDetails(function(error, response){
+			if(!error){
+				document.getElementById('userName').innerHTML = response[0];
+				document.getElementById('userAge').innerHTML = response[1];
+			}
+			else{
+				console.log(error);
+			}
+		});
+		document.getElementById('btn').addEventListener('click',function(){
+				var name = document.getElementById("myText").value;
+				var age = document.getElementById('myAge').value;
+				details.setDetails(name, age);
+		});
+	</script>
 </body>
 </html>
