@@ -37,11 +37,11 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "name",
+				"name": "_name",
 				"type": "string"
 			},
 			{
-				"name": "a",
+				"name": "_a",
 				"type": "uint256"
 			}
 		],
@@ -68,19 +68,37 @@
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "age",
+				"type": "uint256"
+			}
+		],
+		"name": "Instructor",
+		"type": "event"
 	}
 ]);
-		var details = detailsContract.at('0xfe4a44c707ef83ae3b83dc04a8ebe8035fb3129c');
+		var details = detailsContract.at('0x2543440eecdc76ba0f2a7aaa98dc5eeea66d9bf0');
 		console.log(details);
 
 		// ------------------------
-		details.getDetails(function(error, response){
-			if(!error){
-				document.getElementById('userName').innerHTML = response[0];
-				document.getElementById('userAge').innerHTML = response[1];
+		detailsEvent = details.Instructor();
+		detailsEvent.watch(function(err, res){
+			if(!err){
+				document.getElementById("userName").innerHTML = res.args.name;
+				document.getElementById("userAge").innerHTML = res.args.age;
 			}
 			else{
-				console.log(error);
+				console.log(err);
 			}
 		});
 		document.getElementById('btn').addEventListener('click',function(){
